@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+    <style>
+        ul li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body ng-app="bursa">
+    <div ng-controller="myCtrl">
+        <ul>
+            <li ng-repeat="item in poks">
+                <!-- <welcome-message></welcome-message> -->
+                <!-- <br> -->
+                {{item.name}}
+                <a href="#" ng-click="removePok(item)">Delete</a>
+            </li>
+        </ul>
+        <hr>
+        <p>add pokemon</p>
+        <input type="" ng-model="newPok.name">
+        <button ng-click="addPok()">Add Pokemon</button>
+    </div>
+
+    <script>
+        angular.module('bursa', [])
+
+        angular.module('bursa').controller('myCtrl', function($scope, pokeService) {
+            pokeService.getPoks().then(d => d.data).then((data) => {
+                $scope.poks = data.results
+            })
+
+            $scope.addPok = () => {
+                $scope.poks.push(angular.copy($scope.newPok))
+                $scope.newPok.name = ''
+            }
+
+            $scope.removePok = (item) => {
+                let index = $scope.poks.indexOf(item)
+                $scope.poks.splice(index, 1)
+            }
+        })
+
+        angular.module('bursa').service('pokeService', function($http) {
+            this.getPoks = () => $http.get('http://pokeapi.co/api/v2/pokemon/')
+        })
+
+        // angular.module('bursa').directive('welcomeMessage', function() {
+        //     return {
+                // template: `hello {{item.name}} {{counter}}`,
+                // link($scope) {
+                //     $scope.counter = 0
+
+                    //setInterval(() => {
+                     //   $scope.counter++
+                    //    $scope.$applyAsync()
+                    //}, 1000);
+
+        //         }
+        //     }
+        // })
+    </script>
+</body>
+</html>
